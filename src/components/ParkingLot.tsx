@@ -46,6 +46,22 @@ interface ParkingLotProps {
    */
   isSelected?: boolean;
 
+  options?: {
+    /**
+     * Color of the parking lot when it is occupied.
+     * Optional property.
+     * Default: 'lightgrey'
+     */
+    occupiedColor?: string;
+
+    /**
+     * Color of the parking lot when it is vacant.
+     * Optional property.
+     * Default: '#47A992'
+     */
+    vacantColor?: string;
+  };
+
   /**
    * Callback function invoked when the parking lot is dragged.
    * Optional property.
@@ -85,8 +101,6 @@ interface ParkingLotProps {
  * The rectangle's color changes depending on the status of the parking lot:
  * green for available and red for occupied.
  *
- * // TODO: make the color configurable via props
- *
  * When the 'Control' key is pressed, a control circle is displayed that allows
  * the user to resize the parking lot.
  *
@@ -118,6 +132,10 @@ const ParkingLot: React.FC<ParkingLotProps> = ({
   height,
   status,
   isSelected,
+  options = {
+    occupiedColor: 'lightgrey',
+    vacantColor: '#47A992',
+  },
   onDragMove,
   onResize,
   onClick,
@@ -263,8 +281,9 @@ const ParkingLot: React.FC<ParkingLotProps> = ({
         y={newY}
         width={newWidth}
         height={newHeight}
-        fill={status ? 'green' : 'red'}
+        fill={status ? options.occupiedColor : options.vacantColor}
         stroke={'black'}
+        cornerRadius={3}
         strokeWidth={1}
         strokeEnabled={isSelected}
         draggable={isSelected}
