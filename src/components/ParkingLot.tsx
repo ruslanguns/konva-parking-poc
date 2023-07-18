@@ -133,8 +133,8 @@ const ParkingLot: React.FC<ParkingLotProps> = ({
   status,
   isSelected,
   options = {
-    occupiedColor: 'lightgrey',
-    vacantColor: '#47A992',
+    vacantColor: 'lightgrey',
+    occupiedColor: '#47A992',
   },
   onDragMove,
   onResize,
@@ -143,12 +143,12 @@ const ParkingLot: React.FC<ParkingLotProps> = ({
   onDoubleClick,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [newWidth, setNewWidth] = useState(width);
-  const [newHeight, setNewHeight] = useState(height);
   const [ctrlPressed, setCtrlPressed] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [newX, setNewX] = useState(x);
   const [newY, setNewY] = useState(y);
+  const [newWidth, setNewWidth] = useState(width);
+  const [newHeight, setNewHeight] = useState(height);
 
   /**
    * Handles the keydown event for the "Control" key.
@@ -191,6 +191,22 @@ const ParkingLot: React.FC<ParkingLotProps> = ({
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, [handleKeyDown, handleKeyUp]);
+
+  useEffect(() => {
+    setNewX(x);
+  }, [x]);
+
+  useEffect(() => {
+    setNewY(y);
+  }, [y]);
+
+  useEffect(() => {
+    setNewWidth(width);
+  }, [width]);
+
+  useEffect(() => {
+    setNewHeight(height);
+  }, [height]);
 
   /**
    * Handles the drag movement of the parking lot.
