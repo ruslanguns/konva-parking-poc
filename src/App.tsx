@@ -16,26 +16,28 @@ type ParkingLot = {
 };
 
 const PARKING_LOTS: Array<ParkingLot> = [
-  { id: 1, status: false, coorX: 100, coorY: 100, width: 50, height: 50 },
-  { id: 2, status: true, coorX: 200, coorY: 200, width: 50, height: 50 },
-  { id: 3, status: false, coorX: 300, coorY: 300, width: 50, height: 50 },
-  { id: 4, status: true, coorX: 340, coorY: 340, width: 50, height: 50 },
-  { id: 5, status: false, coorX: 380, coorY: 380, width: 50, height: 50 },
+  { id: 1, status: false, coorX: 100, coorY: 100, width: 34, height: 74 },
+  { id: 2, status: true, coorX: 200, coorY: 200, width: 34, height: 74 },
+  { id: 3, status: false, coorX: 300, coorY: 300, width: 34, height: 74 },
+  { id: 4, status: true, coorX: 340, coorY: 340, width: 34, height: 74 },
+  { id: 5, status: false, coorX: 380, coorY: 380, width: 34, height: 74 },
 ];
 
 function App() {
   const [selected, setSelected] = useState(0);
   const parkingSpaceRef = useRef<ParkingSpaceRef>(null);
 
-  const { handleSubmit, watch, register, reset, setValue } = useForm({
-    defaultValues: {
-      coorX: 0,
-      coorY: 0,
-      width: 0,
-      height: 0,
-      status: false,
-    },
-  });
+  const { handleSubmit, watch, register, reset, setValue, getValues } = useForm(
+    {
+      defaultValues: {
+        coorX: 0,
+        coorY: 0,
+        width: 0,
+        height: 0,
+        status: false,
+      },
+    }
+  );
 
   const resetScale = () => {
     parkingSpaceRef.current?.scaleToOne();
@@ -51,14 +53,21 @@ function App() {
     };
   };
 
-  // const createParkingLot = (data: Omit<ParkingLot, 'id'>) => {
-  //   const id = PARKING_LOTS.length + 1;
-  //   PARKING_LOTS.push({
-  //     id,
-  //     ...data,
-  //   });
-  //   setSelected(id);
-  // };
+  const createParkingLot = (data: Omit<ParkingLot, 'id'>) => {
+    const id = PARKING_LOTS.length + 1;
+    PARKING_LOTS.push({
+      id,
+      ...data,
+    });
+
+    setValue('coorX', data.coorX);
+    setValue('coorY', data.coorY);
+    setValue('width', data.width);
+    setValue('height', data.height);
+    setValue('status', data.status);
+
+    setSelected(id);
+  };
 
   // const deleteParkingLot = (id: number) => {
   //   const index = PARKING_LOTS.findIndex((lot) => lot.id === id);
@@ -69,8 +78,6 @@ function App() {
   // };
 
   const onSubmit = (data: any) => {
-    console.log(data);
-
     updateParkingLot(selected, data);
 
     reset();
@@ -78,9 +85,29 @@ function App() {
     setSelected(0);
   };
 
+  const showData = () => {
+    console.log(getValues());
+  };
+
   return (
     <div className="container">
       <button onClick={resetScale}>Reset</button>
+      <button
+        onClick={() =>
+          createParkingLot({
+            status: false,
+            coorX: 400,
+            coorY: 400,
+            width: 34,
+            height: 74,
+          })
+        }
+      >
+        Add new parking lot
+      </button>
+      <button onClick={showData}>Log data</button>
+
+      <h2>Parking Lots ({PARKING_LOTS.length})</h2>
 
       <ParkingSpace
         ref={parkingSpaceRef}
@@ -101,18 +128,11 @@ function App() {
                 x: isSelected ? watch('coorX') : lot.coorX,
                 y: isSelected ? watch('coorY') : lot.coorY,
                 onDoubleClick: (e) => {
-                  setSelected((p) => {
-                    if (isSelected) {
-                      // TODO: Update form (equivalent to submit functionality)
-                      // investigate how to trigger the submit from this... on double click we expect to save so good UX
-
-                      return 0;
-                    }
-
-                    return lot.id;
-                  });
+                  setSelected((p) => (isSelected ? 0 : lot.id));
 
                   if (isSelected) {
+                    console.log(getValues());
+                    updateParkingLot(selected, getValues());
                     reset();
                   } else {
                     setValue('coorX', e.target.attrs.x);
