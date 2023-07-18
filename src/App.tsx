@@ -27,17 +27,15 @@ function App() {
   const [selected, setSelected] = useState(0);
   const parkingSpaceRef = useRef<ParkingSpaceRef>(null);
 
-  const { handleSubmit, watch, register, reset, setValue, getValues } = useForm(
-    {
-      defaultValues: {
-        coorX: 0,
-        coorY: 0,
-        width: 0,
-        height: 0,
-        status: false,
-      },
-    }
-  );
+  const { handleSubmit, watch, register, reset, setValue } = useForm({
+    defaultValues: {
+      coorX: 0,
+      coorY: 0,
+      width: 0,
+      height: 0,
+      status: false,
+    },
+  });
 
   const resetScale = () => {
     parkingSpaceRef.current?.scaleToOne();
@@ -103,7 +101,16 @@ function App() {
                 x: isSelected ? watch('coorX') : lot.coorX,
                 y: isSelected ? watch('coorY') : lot.coorY,
                 onDoubleClick: (e) => {
-                  setSelected((p) => (p === lot.id ? 0 : lot.id));
+                  setSelected((p) => {
+                    if (isSelected) {
+                      // TODO: Update form (equivalent to submit functionality)
+                      // investigate how to trigger the submit from this... on double click we expect to save so good UX
+
+                      return 0;
+                    }
+
+                    return lot.id;
+                  });
 
                   if (isSelected) {
                     reset();
