@@ -90,47 +90,45 @@ function App() {
         className="parking-space"
       >
         {PARKING_LOTS.map((lot) => {
+          const isSelected = selected === lot.id;
+
           return (
             <ParkingLot
               key={lot.id}
-              x={selected === lot.id ? watch('coorX') : lot.coorX}
-              y={selected === lot.id ? watch('coorY') : lot.coorY}
-              width={selected === lot.id ? watch('width') : lot.width}
-              height={selected === lot.id ? watch('height') : lot.height}
-              status={selected === lot.id ? watch('status') : lot.status}
-              isSelected={selected === lot.id}
-              onDoubleClick={(e) => {
-                setSelected((p) => (p === lot.id ? 0 : lot.id));
+              {...{
+                isSelected,
+                height: isSelected ? watch('height') : lot.height,
+                status: isSelected ? watch('status') : lot.status,
+                width: isSelected ? watch('width') : lot.width,
+                x: isSelected ? watch('coorX') : lot.coorX,
+                y: isSelected ? watch('coorY') : lot.coorY,
+                onDoubleClick: (e) => {
+                  setSelected((p) => (p === lot.id ? 0 : lot.id));
 
-                if (lot.id === selected) {
-                  reset();
-                } else {
-                  setValue('coorX', e.target.attrs.x);
-                  setValue('coorY', e.target.attrs.y);
-                  setValue('width', e.target.attrs.width);
-                  setValue('height', e.target.attrs.height);
-                  setValue('status', lot.status);
-                }
-              }}
-              onResize={(newWidth, newHeight) => {
-                setValue('width', newWidth);
-                setValue('height', newHeight);
-              }}
-              onDragMove={(newX, newY) => {
-                setValue('coorX', newX);
-                setValue('coorY', newY);
+                  if (isSelected) {
+                    reset();
+                  } else {
+                    setValue('coorX', e.target.attrs.x);
+                    setValue('coorY', e.target.attrs.y);
+                    setValue('width', e.target.attrs.width);
+                    setValue('height', e.target.attrs.height);
+                    setValue('status', lot.status);
+                  }
+                },
+                onResize: (newWidth, newHeight) => {
+                  setValue('width', newWidth);
+                  setValue('height', newHeight);
+                },
+                onDragMove: (newX, newY) => {
+                  setValue('coorX', newX);
+                  setValue('coorY', newY);
+                },
               }}
             />
           );
         })}
       </ParkingSpace>
 
-      {/* Information */}
-      <p>
-        <strong>Selected:</strong> {selected === 0 ? 'None' : selected}
-      </p>
-
-      {/* Inputs to control the parking lot selected */}
       <form
         onSubmit={handleSubmit(onSubmit)}
         style={{
@@ -138,6 +136,9 @@ function App() {
           flexDirection: 'column',
         }}
       >
+        <h4>
+          <strong>Selected:</strong> {selected === 0 ? 'None' : selected}
+        </h4>
         <label>
           coorX:
           <input
@@ -192,14 +193,6 @@ function App() {
           Update
         </button>
       </form>
-
-      <pre>
-        {JSON.stringify(
-          PARKING_LOTS.find((lot) => lot.id === selected),
-          null,
-          2
-        )}
-      </pre>
     </div>
   );
 }
