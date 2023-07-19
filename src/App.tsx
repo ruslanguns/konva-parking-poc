@@ -25,6 +25,7 @@ const PARKING_LOTS: Array<ParkingLot> = [
 
 function App() {
   const [selected, setSelected] = useState(0);
+  const [hovered, setHovered] = useState(0);
   const parkingSpaceRef = useRef<ParkingSpaceRef>(null);
 
   const { handleSubmit, watch, register, reset, setValue, getValues } = useForm(
@@ -128,7 +129,7 @@ function App() {
                 x: isSelected ? watch('coorX') : lot.coorX,
                 y: isSelected ? watch('coorY') : lot.coorY,
                 onDoubleClick: (e) => {
-                  setSelected((p) => (isSelected ? 0 : lot.id));
+                  setSelected(isSelected ? 0 : lot.id);
 
                   if (isSelected) {
                     console.log(getValues());
@@ -150,6 +151,12 @@ function App() {
                   setValue('coorX', newX);
                   setValue('coorY', newY);
                 },
+                onMouseEnter: () => {
+                  setHovered(lot.id);
+                },
+                onMouseLeave: () => {
+                  setHovered(0);
+                },
               }}
             />
           );
@@ -164,7 +171,8 @@ function App() {
         }}
       >
         <h4>
-          <strong>Selected:</strong> {selected === 0 ? 'None' : selected}
+          <strong>Selected:</strong> {selected === 0 ? 'None' : selected} |{' '}
+          <strong>Hovered:</strong> {hovered === 0 ? 'None' : hovered}
         </h4>
         <label>
           coorX:

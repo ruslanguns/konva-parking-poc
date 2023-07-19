@@ -81,6 +81,18 @@ interface ParkingLotProps {
   onClick?: (e: KonvaEventObject<MouseEvent>) => void;
 
   /**
+   * Callback function invoked when the parking lot is mouse entered (hovered).
+   * Optional property.
+   */
+  onMouseEnter?: (e: KonvaEventObject<MouseEvent>) => void;
+
+  /**
+   * Callback function invoked when the parking lot is mouse entered (hovered).
+   * Optional property.
+   */
+  onMouseLeave?: (e: KonvaEventObject<MouseEvent>) => void;
+
+  /**
    * Callback function invoked when the parking lot is right-clicked.
    * Optional property.
    */
@@ -141,6 +153,8 @@ const ParkingLot: React.FC<ParkingLotProps> = ({
   onClick,
   onContextMenu,
   onDoubleClick,
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [ctrlPressed, setCtrlPressed] = useState(false);
@@ -310,6 +324,8 @@ const ParkingLot: React.FC<ParkingLotProps> = ({
         onClick={onClick}
         onDblClick={onDoubleClick}
         onContextMenu={onContextMenu}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       />
       {isSelected && ctrlPressed && (
         <Circle
