@@ -18,7 +18,11 @@ export type ParkingSpaceProps = React.DetailedHTMLProps<
   HTMLDivElement
 > & { src: string };
 
-export type ParkingSpaceRef = { scaleToOne: () => void };
+export type ParkingSpaceRef = {
+  scaleToOne: () => void;
+  handleZoomIn: () => void;
+  handleZoomOut: () => void;
+};
 
 const ParkingSpace = forwardRef<ParkingSpaceRef, ParkingSpaceProps>(
   ({ src, children, ...props }, parkingSpaceRef) => {
@@ -151,6 +155,20 @@ const ParkingSpace = forwardRef<ParkingSpaceRef, ParkingSpaceProps>(
       }
     }, [image, width]);
 
+    const handleZoomIn = () => {
+      setZoom({
+        x: zoom.x * 1.1,
+        y: zoom.y * 1.1,
+      });
+    };
+
+    const handleZoomOut = () => {
+      setZoom({
+        x: zoom.x / 1.1,
+        y: zoom.y / 1.1,
+      });
+    };
+
     /**
      * The `fitStage` function is equipped with debounce functionality and employed to modify the dimensions of the stage to match the container's width.
      * The function is only invoked after 300 milliseconds have passed since the last invocation,
@@ -190,7 +208,11 @@ const ParkingSpace = forwardRef<ParkingSpaceRef, ParkingSpaceProps>(
     }, [fitStage]);
 
     // This hook exposes the `scaleToOne` function to the parent component.
-    useImperativeHandle(parkingSpaceRef, () => ({ scaleToOne }));
+    useImperativeHandle(parkingSpaceRef, () => ({
+      scaleToOne,
+      handleZoomIn,
+      handleZoomOut,
+    }));
 
     return (
       <div ref={ref} {...props}>

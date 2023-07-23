@@ -16,17 +16,21 @@ type ParkingLot = {
 };
 
 const PARKING_LOTS: Array<ParkingLot> = [
-  { id: 1, status: false, coorX: 100, coorY: 100, width: 34, height: 74 },
-  { id: 2, status: true, coorX: 200, coorY: 200, width: 34, height: 74 },
-  { id: 3, status: false, coorX: 300, coorY: 300, width: 34, height: 74 },
-  { id: 4, status: true, coorX: 340, coorY: 340, width: 34, height: 74 },
-  { id: 5, status: false, coorX: 380, coorY: 380, width: 34, height: 74 },
+  { id: 1, status: false, coorX: 100, coorY: 100, width: 30, height: 65 },
+  { id: 2, status: true, coorX: 200, coorY: 200, width: 30, height: 65 },
+  { id: 3, status: false, coorX: 300, coorY: 300, width: 30, height: 65 },
+  { id: 4, status: true, coorX: 340, coorY: 340, width: 30, height: 65 },
+  { id: 5, status: false, coorX: 380, coorY: 380, width: 30, height: 65 },
 ];
 
 function App() {
   const [selected, setSelected] = useState(0);
   const [hovered, setHovered] = useState(0);
   const parkingSpaceRef = useRef<ParkingSpaceRef>(null);
+
+  const scaleToOne = () => parkingSpaceRef.current?.scaleToOne();
+  const handleZoomIn = () => parkingSpaceRef.current?.handleZoomIn();
+  const handleZoomOut = () => parkingSpaceRef.current?.handleZoomOut();
 
   const { handleSubmit, watch, register, reset, setValue, getValues } = useForm(
     {
@@ -39,10 +43,6 @@ function App() {
       },
     }
   );
-
-  const resetScale = () => {
-    parkingSpaceRef.current?.scaleToOne();
-  };
 
   const updateParkingLot = (id: number, data: Omit<ParkingLot, 'id'>) => {
     const index = PARKING_LOTS.findIndex((lot) => lot.id === id);
@@ -92,21 +92,23 @@ function App() {
 
   return (
     <div className="container">
-      <button onClick={resetScale}>Reset</button>
+      <button onClick={scaleToOne}>Reset</button>
       <button
         onClick={() =>
           createParkingLot({
             status: false,
             coorX: 400,
             coorY: 400,
-            width: 34,
-            height: 74,
+            width: 30,
+            height: 65,
           })
         }
       >
         Add new parking lot
       </button>
       <button onClick={showData}>Log data</button>
+      <button onClick={handleZoomIn}>+</button>
+      <button onClick={handleZoomOut}>-</button>
 
       <h2>Parking Lots ({PARKING_LOTS.length})</h2>
 
@@ -132,7 +134,6 @@ function App() {
                   setSelected(isSelected ? 0 : lot.id);
 
                   if (isSelected) {
-                    console.log(getValues());
                     updateParkingLot(selected, getValues());
                     reset();
                   } else {
