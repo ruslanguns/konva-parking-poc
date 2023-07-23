@@ -48,18 +48,13 @@ function App() {
     const index = PARKING_LOTS.findIndex((lot) => lot.id === id);
     if (index === -1) return;
 
-    PARKING_LOTS[index] = {
-      ...PARKING_LOTS[index],
-      ...data,
-    };
+    PARKING_LOTS[index] = { ...PARKING_LOTS[index], ...data };
   };
 
   const createParkingLot = (data: Omit<ParkingLot, 'id'>) => {
     const id = PARKING_LOTS.length + 1;
-    PARKING_LOTS.push({
-      id,
-      ...data,
-    });
+
+    PARKING_LOTS.push({ id, ...data });
 
     setValue('coorX', data.coorX);
     setValue('coorY', data.coorY);
