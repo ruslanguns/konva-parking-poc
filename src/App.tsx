@@ -78,7 +78,7 @@ function App() {
   //   setSelected(0);
   // };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Omit<ParkingLot, 'id'>) => {
     updateParkingLot(selected, data);
 
     reset();
@@ -137,10 +137,10 @@ function App() {
                     updateParkingLot(selected, getValues());
                     reset();
                   } else {
-                    setValue('coorX', e.target.attrs.x);
-                    setValue('coorY', e.target.attrs.y);
-                    setValue('width', e.target.attrs.width);
-                    setValue('height', e.target.attrs.height);
+                    setValue('coorX', e.target.attrs.x as number);
+                    setValue('coorY', e.target.attrs.y as number);
+                    setValue('width', e.target.attrs.width as number);
+                    setValue('height', e.target.attrs.height as number);
                     setValue('status', lot.status);
                   }
                 },
